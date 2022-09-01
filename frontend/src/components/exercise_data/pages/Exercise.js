@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container, Grid } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,6 +9,11 @@ import {Select} from "@mui/material";
 import {InputLabel} from "@mui/material";
 import {Box} from "@mui/material";
 import {FormControl, MenuItem} from "@mui/material";
+import { Stack } from "@mui/system";
+
+
+
+
 
 
 
@@ -48,9 +53,9 @@ function DatePicker() {
             label="Excercise"
             onChange={handleChange}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={"bench"}>Bench</MenuItem>
+            <MenuItem value={"squat"}>Squat</MenuItem>
+            <MenuItem value={"deadlift"}>Deadlift</MenuItem>
           </Select>
         </>
  
@@ -67,32 +72,86 @@ function DatePicker() {
 
 export default function Exercise() {
 
+    
+
+    
+    const inputs = {
+        Date: Date(),
+        Excercise: "",
+        Weight: 0,
+        Reps: 0,
+        Sets: 0
+
+
+    }
+
+    const [date, setDate] = React.useState(Date());
+    const [exercise, setExercise] = React.useState("");
+    const [weight, setWeight] = React.useState(0);
+    const [reps, setReps] = React.useState(0);
+    const [sets, setSets] = React.useState(0);
+
+
+
+    const handleChange = event => {
+        switch(event.currentTarget.id){
+            case("date-input"): 
+                setDate(event.currentTarget.value);
+                break;
+            case("exercise-input"):
+                setExercise(event.target.value);
+                break;
+
+            case("weight-input"):
+                setWeight(event.currentTarget.value);
+                break;
+
+            case("reps-input"):
+                setReps(event.currentTarget.value);
+                break;
+
+            case("sets-input"):
+                setSets(event.currentTarget.value);
+
+            
+        }
+    }
+
+    const sendData = () => {
+        // TODO, send all input data to django api
+    }
+
     return (
         <>
-        {/* <h1>New Exercise</h1>
-        <Box justifyContent="center">
-            <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-}}> */}
             <h1>New Exercise</h1>
-            <Container>
-                {/* <Box
-                alignItems="center"
-                justifyContent="center"> */}
-         
-            <DatePicker id="date-input"></DatePicker>
-            <ExcerciseSelector id="excercise-input"></ExcerciseSelector>
-            <TextField id="weight-input" label="Weight" variant="outlined" />
-            <TextField id="reps-input" label="Reps" variant="outlined" />
-            <TextField id="sets-input" label="Sets" variant="outlined" />
 
-            {/* </Box> */}
-            
+            <DatePicker id="date-input" onChange={handleChange}></DatePicker>
+            <h1></h1>
+            <Container alignItems ="center">
+            <ExcerciseSelector id="excercise-input" onChange={handleChange}></ExcerciseSelector>
+
             </Container>
-            {/* </div>
-            </Box> */}
+            <h1></h1>
+
+            <Box
+            display="flex"
+                alignItems="center"
+                justifyContent="center">
+            <Stack direction={{xs:"column", sm:"row"}} spacing={{xs:2, sm:2, md:4}} align items="center" alignContent="center">
+            <TextField id="weight-input" label="Weight" variant="outlined" onChange={handleChange} value={weight}/>
+            <TextField id="reps-input" label="Reps" variant="outlined" onChange={handleChange}/>
+            <TextField id="sets-input" label="Sets" variant="outlined" onChange={handleChange}/>
+            
+            </Stack>
+            </Box>
+            <h1></h1>
+            <Button onClick={sendData}>Submit Entry</Button>
+            
+            
+
+           
+
+            
             
         </>        
 

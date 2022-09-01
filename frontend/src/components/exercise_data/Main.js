@@ -160,7 +160,7 @@ function OrderBar() {
                 color: lightBlue[500],
                 textDecoration: 'none'
               }}>
-              Exercise
+              Trackercise
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
@@ -218,7 +218,7 @@ function OrderBar() {
                 textDecoration: 'none'
               }}
             >
-              Exercise
+              Trackercise
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 
