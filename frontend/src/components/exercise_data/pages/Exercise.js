@@ -1,75 +1,15 @@
 import * as React from "react";
-import { Button, Container, Grid } from "@mui/material";
-import dayjs from 'dayjs';
-import datefns from 'date-fns';
+import { Button, Container} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Select from "@mui/material/Select";
 import {InputLabel} from "@mui/material";
 import {Box} from "@mui/material";
-import {FormControl, MenuItem} from "@mui/material";
+import {MenuItem} from "@mui/material";
 import { Stack } from "@mui/system";
 import axios from "axios";
-
-
-
-
-
-
-// function DatePicker() {
-//   const [value, setValue] = React.useState(dayjs(''));
-
-//   const handleChange = (newValue) => {
-//     setValue(newValue);
-//   };
-
-//   return (
-//     <LocalizationProvider dateAdapter={AdapterDayjs}>
-//         <DateTimePicker
-
-//           label="Date&Time picker"
-//           value={value}
-//           onChange={handleChange}
-//           renderInput={(params) => <TextField {...params} />}
-//         />
-//     </LocalizationProvider>
-//   );
-// }
-
- const ExcerciseSelector = () => {
-    const [excercise, setExcercise] = React.useState('');
-  
-    const handleChange = (event) => {
-      setExcercise(event.target.value);
-    };
-  
-    return (
-      <>
-          <InputLabel id="select-label">Excercise</InputLabel>
-          <Select
-            labelId="select-label"
-            id="excercise-selector"
-            value={excercise}
-            label="Excercise"
-            onChange={handleChange}
-          >
-            <MenuItem value={"bench"}>Bench</MenuItem>
-            <MenuItem value={"squat"}>Squat</MenuItem>
-            <MenuItem value={"deadlift"}>Deadlift</MenuItem>
-          </Select>
-        </>
- 
-    );
-  }
-
-
-
-
-
-
 
 
 
@@ -78,15 +18,29 @@ export default function Exercise() {
     
 
 
-    const [dateInput, setDate] =  React.useState(dayjs('').format());
-    const [exerciseInput, setExercise] = React.useState('');
-    const [weightInput, setWeight] = React.useState('');
-    const [repsInput, setReps] = React.useState(0);
-    const [setsInput, setSets] = React.useState(0);
+    const [dateInput, setDate] =  React.useState(null);
+    const [exerciseInput, setExercise] = React.useState(null);
+    const [weightInput, setWeight] = React.useState(null);
+    const [repsInput, setReps] = React.useState(null);
+    const [setsInput, setSets] = React.useState(null);
 
     const handleExercise = (event) => {
       setExercise(event.target.value);
     };
+
+    const handleWeight = (event) => {
+      setWeight(event.currentTarget.value);
+    };
+
+    const handleReps = (event) => {
+      setReps(event.currentTarget.value);
+    };
+
+    const handleSets = (event) => {
+      setSets(event.currentTarget.value);
+    };
+
+
 
 
   
@@ -94,27 +48,6 @@ export default function Exercise() {
 
 
 
-    const handleChange = (event) => {
-        switch(event.currentTarget.id){
-            case("exercise-input"):
-
-                setExercise(event.target.value);
-                console.log(typeof exerciseInput);
-                break;
-
-            case("weight-input"):
-                setWeight(event.currentTarget.value);
-                break;
-
-            case("reps-input"):
-                setReps(event.currentTarget.value);
-                break;
-
-            case("sets-input"):
-                setSets(event.currentTarget.value);
-            
-        }
-    }
 
     const sendData = () => {
       axios.post("http://localhost:8000/api/entries/", 
@@ -136,7 +69,6 @@ export default function Exercise() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 label="Date&Time picker"
-                value={dateInput}
                 onChange={(newValue) => {
                   setDate(newValue);
 
@@ -166,9 +98,9 @@ export default function Exercise() {
                 alignItems="center"
                 justifyContent="center">
             <Stack direction={{xs:"column", sm:"row"}} spacing={{xs:2, sm:2, md:4}} align items="center" alignContent="center">
-            <TextField id="weight-input" label="Weight" variant="outlined" onChange={handleChange} />
-            <TextField id="reps-input" label="Reps" variant="outlined" onChange={handleChange} input="number"/>
-            <TextField id="sets-input" label="Sets" variant="outlined" onChange={handleChange} input="number"/>
+            <TextField id="weight-input" label="Weight (lbs)" variant="outlined" onChange={handleWeight} />
+            <TextField id="reps-input" label="Reps" variant="outlined" onChange={handleReps} input="number"/>
+            <TextField id="sets-input" label="Sets" variant="outlined" onChange={handleSets} input="number"/>
             
             </Stack>
             </Box>
