@@ -5,7 +5,6 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';  
 // I think this makes the app bar a specific size
 // disableGutters IDRK
-import AdbIcon from '@mui/icons-material/Adb'; 
 // Some icon from materialui (looks cool but change to something else later)
 import Typography from '@mui/material/Typography';
 // Lets you customize text
@@ -29,8 +28,7 @@ import {Menu} from '@mui/material';
 import Button from '@mui/material/Button';
 import {Tooltip} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SportsBarIcon from '@mui/icons-material/SportsBar';
+
 
 // TODO Make seperate seperate menus for each items type
 
@@ -46,7 +44,6 @@ import Exercise from './pages/Exercise';
 import Friends from "./pages/Friends"
 import History from './pages/History';
 
-import PurchaseHistory from '../user_info/PurchaseHistory';
 import Settings from '../user_info/Settings';
 
 
