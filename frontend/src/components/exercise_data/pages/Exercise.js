@@ -23,6 +23,7 @@ export default function Exercise() {
     const [weightInput, setWeight] = React.useState(null);
     const [repsInput, setReps] = React.useState(null);
     const [setsInput, setSets] = React.useState(null);
+    const [confirmed, setConfirmed] = React.useState(false);
 
     const handleExercise = (event) => {
       setExercise(event.target.value);
@@ -40,6 +41,9 @@ export default function Exercise() {
       setSets(event.currentTarget.value);
     };
 
+    const Confirmation = () => {
+      return(<h1>Entry Submitted Successfully</h1>)
+    }
 
 
 
@@ -57,8 +61,16 @@ export default function Exercise() {
         weight: weightInput,
         reps: repsInput,
         sets: setsInput
-      })
-        // TODO, send all input data to django api
+      }).then( () => {
+                      setConfirmed(true);
+                    }, 
+                (err) => { // Will be an error if in 10000 or more than more than 2 decimal points
+                          console.log(err)
+                          alert("Input all data before submitting");
+                          setConfirmed(false);
+                        }
+      )
+        // TODO use then to handle api req error
         // axios
     }
 
@@ -68,7 +80,8 @@ export default function Exercise() {
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                label="Date&Time picker"
+                label="Pick a Date"
+                value={dateInput}
                 onChange={(newValue) => {
                   setDate(newValue);
 
@@ -106,7 +119,9 @@ export default function Exercise() {
             </Box>
             <h1></h1>
             <Button onClick={sendData}>Submit Entry</Button>
+            
             <h1></h1>
+            {confirmed && <Confirmation></Confirmation>}
             
             
             
