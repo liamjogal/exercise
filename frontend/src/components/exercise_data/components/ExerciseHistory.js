@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -36,7 +37,30 @@ export default function CustomToolbarGrid() {
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/entries/").then((res) => {
-      console.log(res.data);
+      //setData(res.data);
+
+      console.log(data);
+      for (const key in res.data) {
+        // console.log(data[key]);
+        console.log(res.data[key]);
+        console.log(res.data[key]["date"]);
+        res.data[key]["date"] = moment(res.data[key]["date"]).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        );
+        console.log(res.data[key]["date"]);
+        // for (const innerKey in data[key]) {
+        //   console.log(typeof innerKey);
+        //   if (innerKey == "weight") {
+        //     data[key]
+        //   }
+
+        //   //   console.log(innerKey);
+        //   //   console.log(data[key][innerKey]);
+        //   //   data[key][innerKey] = moment(data[key]).format(
+        //   //     "MMMM Do YYYY, h:mm:ss a"
+        //   //   );
+        // }
+      }
       setData(res.data);
     });
   }, []);
