@@ -16,18 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from exercise import views
-
-from rest_framework import routers
-
-router= routers.DefaultRouter()
-
-router.register(r'entries', views.ExerciseView, 'entries')
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # localhost:8000/api should route to the django Rest framework
-    path('api/', include(router.urls))
+    path('api/', include('exercise.urls'))
 ]

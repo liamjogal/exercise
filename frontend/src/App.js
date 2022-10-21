@@ -1,14 +1,14 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Main from "./components/exercise_data/Main";
-import ResponsiveAppBar from "./components/MUI_References/ResponsiveAppBar";
-import { Grid } from "@mui/material";
+import Login from "./components/Login";
 import * as react from "react";
+import { Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <Main></Main>
+      <Login></Login>
     </div>
   );
 }
