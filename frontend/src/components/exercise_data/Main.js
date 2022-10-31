@@ -30,7 +30,7 @@ import { Tooltip } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
 import * as React from "react";
-import { lightBlue } from "@mui/material/colors";
+import { purple } from "@mui/material/colors";
 
 import Exercise from "./pages/Exercise";
 
@@ -135,12 +135,12 @@ function Main() {
                 fontFamily: "Verdana",
                 fontWeight: 700,
                 flexgGrow: 1,
-                letterSpacing: ".25rem",
-                color: lightBlue[500],
+                // letterSpacing: ".25rem",
+                color: purple[800],
                 textDecoration: "none",
               }}
             >
-              Trackercise
+              GymRat
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
@@ -191,17 +191,17 @@ function Main() {
                 fontFamily: "Verdana",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: lightBlue[500],
+                color: purple[800],
                 textDecoration: "none",
               }}
             >
-              Trackercise
+              GymRat
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Button
                 id="New Exercise"
                 onClick={handlePageChange}
-                sx={{ my: 2, color: lightBlue[500] }}
+                sx={{ my: 2, color: purple[800] }}
               >
                 New Exercise
               </Button>
@@ -210,7 +210,7 @@ function Main() {
                 id="History"
                 key="fbutt"
                 onClick={handlePageChange}
-                sx={{ my: 2, color: lightBlue[500] }}
+                sx={{ my: 2, color: purple[800] }}
               >
                 History
               </Button>
@@ -218,7 +218,7 @@ function Main() {
                 id="Friends"
                 key="fbutt"
                 onClick={handlePageChange}
-                sx={{ my: 2, color: lightBlue[500] }}
+                sx={{ my: 2, color: purple[800] }}
               >
                 Friends
               </Button>
@@ -229,9 +229,9 @@ function Main() {
                   aria-controls="user-info"
                   onClick={handleOpenUserMenu}
                   onClose={handleCloseUserMenu}
-                  sx={{ my: 2, color: lightBlue[500] }}
+                  sx={{ my: 2, color: purple[800] }}
                 >
-                  <Avatar id="avatar" sx={{ bgcolor: lightBlue[500] }}></Avatar>
+                  <Avatar id="avatar" sx={{ bgcolor: purple[800] }}></Avatar>
                 </IconButton>
               </Tooltip>
               <Menu

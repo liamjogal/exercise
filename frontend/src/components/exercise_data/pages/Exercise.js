@@ -9,6 +9,7 @@ import { InputLabel } from "@mui/material";
 import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Stack } from "@mui/system";
+import { purple } from "@mui/material/colors";
 import axios from "axios";
 
 export default function Exercise() {
@@ -152,7 +153,9 @@ export default function Exercise() {
         </Stack>
       </Box>
       <h1></h1>
-      <Button onClick={sendData}>Submit Entry</Button>
+      <Button sx={{ color: purple[800] }} onClick={sendData}>
+        Submit Entry
+      </Button>
 
       <h1></h1>
       {confirmed && <Confirmation></Confirmation>}
