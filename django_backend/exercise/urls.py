@@ -3,7 +3,7 @@ from rest_framework import routers
 from . import views
 
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register(r'entries', views.ExerciseView)
 router.register(r'bench_entries', views.BenchView)
 router.register(r'squat_entries', views.SquatView)

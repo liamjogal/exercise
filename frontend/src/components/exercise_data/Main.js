@@ -1,50 +1,33 @@
 import AppBar from "@mui/material/AppBar";
-// Kinda know. IDRK
 import Container from "@mui/material/Container";
-// No clue. IDRK
+
 import Toolbar from "@mui/material/Toolbar";
-// I think this makes the app bar a specific size
-// disableGutters IDRK
-// Some icon from materialui (looks cool but change to something else later)
+
 import Typography from "@mui/material/Typography";
-// Lets you customize text
-// variant lets you determine the html element (h6 is the 6th smallest header I think)
-// noWrap makes it so words don't wrap onto another but just truncate I think
-// component defines the html element or component for the root node. IDRK
-// href provides a link, doesn't work if no component="a"
-// sx provides overides for CSS and additional CSS styles
+
 import Box from "@mui/material/Box";
-// Box component serves as a wrapper component for most of the CSS utility needs.
 import { IconButton, MenuItem } from "@mui/material";
-// Button to put an icon in I think
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu } from "@mui/material";
-// Display a list of services
-// id is a css selector to identify that specific element
-// anchorEl HTML element or a function that returns an HTML element (used to set position of the Menu), in this case the html element anchorElNav returned by the state hook on line 38
-// anchorOrigin point where the anchorEl attaches to, used when anchorReference is anchorEl
-// transformOrigin This is the point on the popover which will attach to the anchor's origin
-// open shows element if true TODO: Continue from here
+
 import Button from "@mui/material/Button";
 import { Tooltip } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
 import * as React from "react";
-import { purple } from "@mui/material/colors";
-
-import Exercise from "./pages/Exercise";
+import { blue } from "@mui/material/colors";
 
 import Friends from "./pages/Friends";
 import History from "./pages/History";
 
 import Settings from "../user_info/Settings";
 
-// const drinks = ["Beer", "Cocktails", "Wine", "Non-Alcoholic"]
+import Profile from "../user_info/profile";
 
 function Main() {
   const ref = React.useRef();
 
-  const pages = ["New Exercise", "History", "Friends"];
+  const pages = ["My Exercise", "Friends"];
 
   const accountOptions = ["Settings", "Log Out"];
 
@@ -55,7 +38,7 @@ function Main() {
   const [showUpdate, setShowUpdate] = React.useState(true);
   const [showFriends, setShowFriends] = React.useState(false);
 
-  const [showHistory, setShowHistory] = React.useState(false);
+  const [showHistory, setShowHistory] = React.useState(true);
   const [showSettings, setShowSettings] = React.useState(false);
 
   // TODO: Fix Menu to set Menu Deals and Friends to show based off button pressed using hooks
@@ -136,7 +119,7 @@ function Main() {
                 fontWeight: 700,
                 flexgGrow: 1,
                 // letterSpacing: ".25rem",
-                color: purple[800],
+                color: blue[800],
                 textDecoration: "none",
               }}
             >
@@ -191,7 +174,7 @@ function Main() {
                 fontFamily: "Verdana",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: purple[800],
+                color: blue[800],
                 textDecoration: "none",
               }}
             >
@@ -199,26 +182,18 @@ function Main() {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Button
-                id="New Exercise"
-                onClick={handlePageChange}
-                sx={{ my: 2, color: purple[800] }}
-              >
-                New Exercise
-              </Button>
-
-              <Button
                 id="History"
                 key="fbutt"
                 onClick={handlePageChange}
-                sx={{ my: 2, color: purple[800] }}
+                sx={{ my: 2, color: blue[800] }}
               >
-                History
+                My Exercise
               </Button>
               <Button
                 id="Friends"
                 key="fbutt"
                 onClick={handlePageChange}
-                sx={{ my: 2, color: purple[800] }}
+                sx={{ my: 2, color: blue[800] }}
               >
                 Friends
               </Button>
@@ -229,9 +204,9 @@ function Main() {
                   aria-controls="user-info"
                   onClick={handleOpenUserMenu}
                   onClose={handleCloseUserMenu}
-                  sx={{ my: 2, color: purple[800] }}
+                  sx={{ my: 2, color: blue[800] }}
                 >
-                  <Avatar id="avatar" sx={{ bgcolor: purple[800] }}></Avatar>
+                  <Avatar id="avatar" sx={{ bgcolor: blue[800] }}></Avatar>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -256,7 +231,7 @@ function Main() {
           </Toolbar>
         </Container>
       </AppBar>
-      {showUpdate && <Exercise></Exercise>}
+
       {showHistory && <History></History>}
       {showFriends && <Friends></Friends>}
       {showSettings && <Settings></Settings>}

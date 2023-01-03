@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # localhost:8000/api should route to the django Rest framework
-    path('api/', include('exercise.urls'))
+    path('api/', include('exercise.routers', 'exercise'), namespace='core-api')
 ]
