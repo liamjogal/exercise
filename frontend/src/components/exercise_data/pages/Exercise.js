@@ -10,9 +10,13 @@ import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { Stack } from "@mui/system";
 import { blue } from "@mui/material/colors";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Exercise() {
+  const navigate = useNavigate();
+  const data = useLocation().state;
+  const num = useLocation().state.added;
   const [dateInput, setDate] = React.useState(null);
   const [exerciseInput, setExercise] = React.useState(null);
   const [weightInput, setWeight] = React.useState(null);
@@ -22,7 +26,6 @@ export default function Exercise() {
 
   const handleExercise = (event) => {
     setExercise(event.target.value);
-    console.log("Exercise: " + exerciseInput);
   };
 
   const handleWeight = (event) => {
@@ -41,52 +44,44 @@ export default function Exercise() {
     return <h1>Entry Submitted Successfully</h1>;
   };
 
-  const sendData = () => {
-    axios
-      .post("http://localhost:8000/api/entries/", {
-        date: dateInput,
-        exercise: exerciseInput,
-        weight: weightInput,
-        reps: repsInput,
-        sets: setsInput,
+  const sendData = async () => {
+    if (
+      dateInput == null ||
+      exerciseInput == null ||
+      weightInput == null ||
+      repsInput == null ||
+      setsInput == null
+    ) {
+      alert("Input all data before submitting");
+      return;
+    }
+    await axios
+      .put("http://localhost:4000/newExercise", {
+        id: data.id,
+        exercise: {
+          date: dateInput,
+          exercise: exerciseInput,
+          weight: weightInput,
+          reps: repsInput,
+          sets: setsInput,
+        },
       })
       .then(
         (res) => {
           console.log(res);
           setConfirmed(true);
+          window.location.reload(false);
         },
         (err) => {
           // Will be an error if in 10000 or more than more than 2 decimal points
           console.log(err);
-          alert("Input all data before submitting");
+          alert(
+            "Error submitting excercise. Check to make sure inputs are formatted correctly"
+          );
           setConfirmed(false);
         }
       );
 
-    axios
-      .post(
-        `http://localhost:8000/api/${String(
-          exerciseInput
-        ).toLowerCase()}_entries/`,
-        {
-          date: dateInput,
-          weight: weightInput,
-          reps: repsInput,
-          sets: setsInput,
-        }
-      )
-      .then(
-        (res) => {
-          console.log(res);
-          setConfirmed(true);
-        },
-        (err) => {
-          // Will be an error if in 10000 or more than more than 2 decimal points
-          console.log(err);
-          alert("Input all data before submitting");
-          setConfirmed(false);
-        }
-      );
     // TODO use then to handle api req error
     // axios
   };

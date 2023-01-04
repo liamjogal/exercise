@@ -12,12 +12,13 @@ export default function Login() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [loggedin, setLoggedin] = React.useState(false);
+  const [info, setInfo] = React.useState(null);
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
     if (loggedin) {
-      navigate("/home");
+      navigate("/home", { state: { id: info._id, added: 0 } });
     }
   }, [loggedin, navigate]);
 
@@ -47,7 +48,10 @@ export default function Login() {
         return;
       })
       .then((res) => {
-        if (res.status === 200) setLoggedin(true);
+        if (res.status === 200) {
+          setInfo(res.data);
+          setLoggedin(true);
+        }
         console.log(res);
       });
   }
@@ -126,6 +130,7 @@ export default function Login() {
             Login
           </Button>
           <Button sx={{ color: blue[800] }} onClick={handleRegistration}>
+            {/* fix make sign up js file later */}
             <Link to="/signup">Sign Up</Link>
           </Button>
         </Stack>
