@@ -21,8 +21,11 @@ import Friends from "./pages/Friends";
 import History from "./pages/History";
 
 import Settings from "../user_info/Settings";
+import "../../App.css";
 
 import Profile from "../user_info/profile";
+import { AccountContext } from "../../context/AccountContext";
+import { useLocation } from "react-router-dom";
 
 function Main() {
   const ref = React.useRef();
@@ -39,7 +42,7 @@ function Main() {
   const [showFriends, setShowFriends] = React.useState(false);
 
   const [showHistory, setShowHistory] = React.useState(true);
-  const [showSettings, setShowSettings] = React.useState(false);
+  const [showUser, setshowUser] = React.useState(false);
 
   // TODO: Fix Menu to set Menu Deals and Friends to show based off button pressed using hooks
 
@@ -47,12 +50,12 @@ function Main() {
     update = false,
     history = false,
     friends = false,
-    settings = false
+    user = false
   ) => {
     setShowUpdate(update);
     setShowHistory(history);
     setShowFriends(friends);
-    setShowSettings(settings);
+    setshowUser(user);
   };
 
   const handleOpenNavMenu = (event) => {
@@ -85,131 +88,126 @@ function Main() {
       case "Friends":
         setDocument(false, false, true, false);
         break;
-
-      case "Settings":
+      case "user-account":
         setDocument(false, false, false, true);
-        setAnchorElUser(null);
-        break;
-      case "Log Out": // TODO add some way of alerting the user to make sure they want to log out
-        setAnchorElUser(null);
         break;
     }
   };
-
   return (
-    <>
-      <AppBar
-        id="menu-nav-bar"
-        position="relative"
-        color="transparent"
-        sx={{ height: 75 }}
-        enableColorOnDark
-      >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "Verdana",
-                fontWeight: 700,
-                flexgGrow: 1,
-                // letterSpacing: ".25rem",
-                color: blue[800],
-                textDecoration: "none",
-              }}
-            >
-              GymRat
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
+    <AccountContext.Provider value={useLocation().state.context}>
+      <>
+        <AppBar
+          id="menu-nav-bar"
+          position="relative"
+          color="transparent"
+          sx={{ height: 75 }}
+          enableColorOnDark
+        >
+          <Container maxWidth="xl">
+            <Toolbar disableGutters>
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="/"
                 sx={{
-                  display: { xs: "block", md: "none" },
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "Verdana",
+                  fontWeight: 700,
+                  flexgGrow: 1,
+                  // letterSpacing: ".25rem",
+                  color: blue[800],
+                  textDecoration: "none",
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem id={page} key="Nav" onClick={handlePageChange}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href=""
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexgGrow: 1,
-                fontFamily: "Verdana",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: blue[800],
-                textDecoration: "none",
-              }}
-            >
-              GymRat
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              <Button
-                id="History"
-                key="fbutt"
-                onClick={handlePageChange}
-                sx={{ my: 2, color: blue[800] }}
-              >
-                My Exercise
-              </Button>
-              <Button
-                id="Friends"
-                key="fbutt"
-                onClick={handlePageChange}
-                sx={{ my: 2, color: blue[800] }}
-              >
-                Friends
-              </Button>
-            </Box>
-            <Box sx={{ flexGrow: 0 }} ref={ref}>
-              <Tooltip title="Account Info">
+                GymRat
+              </Typography>
+              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton
-                  aria-controls="user-info"
-                  onClick={handleOpenUserMenu}
-                  onClose={handleCloseUserMenu}
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}
+                >
+                  {pages.map((page) => (
+                    <MenuItem id={page} key="Nav" onClick={handlePageChange}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href=""
+                sx={{
+                  mr: 2,
+                  display: { xs: "flex", md: "none" },
+                  flexgGrow: 1,
+                  fontFamily: "Verdana",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: blue[800],
+                  textDecoration: "none",
+                }}
+              >
+                GymRat
+              </Typography>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                <Button
+                  id="History"
+                  key="fbutt"
+                  onClick={handlePageChange}
                   sx={{ my: 2, color: blue[800] }}
                 >
-                  <Avatar id="avatar" sx={{ bgcolor: blue[800] }}></Avatar>
-                </IconButton>
-              </Tooltip>
-              <Menu
+                  My Exercise
+                </Button>
+                <Button
+                  id="Friends"
+                  key="fbutt"
+                  onClick={handlePageChange}
+                  sx={{ my: 2, color: blue[800] }}
+                >
+                  Friends
+                </Button>
+              </Box>
+              <Box sx={{ flexGrow: 0 }} ref={ref}>
+                <Tooltip title="Account Info">
+                  <IconButton
+                    id="user-account"
+                    aria-controls="user-info"
+                    onClick={handlePageChange}
+                    sx={{ my: 2, color: blue[800] }}
+                  >
+                    <Avatar id="avatar" sx={{ bgcolor: blue[800] }}></Avatar>
+                  </IconButton>
+                </Tooltip>
+                {/* <Menu
                 id="user-info"
                 anchorEl={anchorElUser}
                 key="Info"
@@ -226,16 +224,17 @@ function Main() {
                     <Typography textAlign="center">{option}</Typography>
                   </MenuItem>
                 ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+              </Menu> */}
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
 
-      {showHistory && <History></History>}
-      {showFriends && <Friends></Friends>}
-      {showSettings && <Settings></Settings>}
-    </>
+        {showHistory && <History></History>}
+        {showFriends && <Friends></Friends>}
+        {showUser && <Profile></Profile>}
+      </>
+    </AccountContext.Provider>
   );
 }
 

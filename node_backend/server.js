@@ -38,6 +38,19 @@ const userSchema = mongoose.Schema({
 
 const userModel = mongoose.model("userModel", userSchema, "logins");
 
+const smSchema = mongoose.Schema({
+  user: String,
+  followers: [String],
+  following: [String],
+  privacy: String,
+  bio: String,
+  exercise_type: String,
+  exercises: [exerciseSchema],
+  posts: [String],
+});
+
+const smModel = mongoose.model("smSchema", smSchema, "sminfo");
+
 // function to register a user
 function register(name, passw, privStat) {
   const newUser = new userModel({
@@ -50,9 +63,23 @@ function register(name, passw, privStat) {
     if (err) console.log(err);
     else console.log(model.username + " was registered");
   });
+  const newSm = new smModel({
+    user: name,
+    followers: [],
+    following: [],
+    privacy: privStat,
+    bio: "Not added",
+    exercise_type: "Not added",
+    exercises: [],
+    posts: [],
+  });
+  newSm.save(function (err, model) {
+    if (err) console.log(err);
+    else console.log(model.user + " smmodel was registered");
+  });
 }
 
-function addWorkout(id) {}
+// app.post("/follower", async (req, res) => {})
 
 // REGISTER A USER
 app.post("/createUser", async (req, res) => {
@@ -68,7 +95,7 @@ app.post("/createUser", async (req, res) => {
       res.status(422).send("username already exists");
       return;
     } else {
-      register(body.name, body.password, "private");
+      register(body.name, body.password, "public");
       console.log("success");
       res.status(201).send("sucess");
       return;
@@ -83,6 +110,7 @@ app.get("/createUser", async (req, res) => {
 app.get("/login", async (req, res) => {
   //console.log(req);
   const query = req.query;
+  var data = { account: {}, smInfo: {} };
   userModel
     .findOne({
       username: query.name,
@@ -100,17 +128,32 @@ app.get("/login", async (req, res) => {
       } else {
         console.log(`logged in ${query.name}`);
         console.log(person);
-        res.status(200).send(person);
+        data.account = person;
       }
     });
+  smModel.findOne({ user: query.name }).exec((err, smData) => {
+    if (err) {
+      res.status(400).send(err);
+      return console.log("error");
+    }
+    if (smData == null) {
+      console.log("invalid login");
+      res.status(404).send("user credentials are invalid");
+      return;
+    } else {
+      console.log(`found smData for ${query.name}`);
+      console.log(smData);
+      data.smInfo = smData;
+
+      res.status(200).send(data);
+    }
+  });
 });
 
 app.get("/exercises", async (req, res) => {
   //console.log(req);
   const query = req.query;
-  console.log("getting exercise");
-  console.log(`query ${query}`);
-  console.log(query.id);
+
   userModel.findById(query.id, (err, data) => {
     console.log(data);
     if (err) {
@@ -122,6 +165,7 @@ app.get("/exercises", async (req, res) => {
       return console.log("response null");
     } else {
       console.log(`exercises in ${data.exercises}`);
+
       res.status(200).send(data.exercises);
     }
   });
@@ -129,12 +173,8 @@ app.get("/exercises", async (req, res) => {
 
 app.put("/newExercise", async (req, res) => {
   const body = req.body;
-  console.log(body.exercise);
-  // body.exercise.date = Date(body.exercise.date);
-  // body.exercise.weight = Number(body.exercise.date);
-  // body.exercise.reps = Number(body.exercise.reps);
-  // body.exercise.sets = Number(body.exercise.sets);
-  console.log(body.id);
+
+  var name;
 
   userModel.updateOne(
     { _id: body.id },
@@ -145,9 +185,23 @@ app.put("/newExercise", async (req, res) => {
         res.status(400).send("error");
         return;
       } else {
-        console.log(`added new ${body.exercise} exercise`);
+        console.log(`added new  exercise`);
         console.log(doc);
-        res.status(200).send("worked");
+        smModel.updateOne(
+          { user: body.user },
+          { $push: { exercises: body.exercise } },
+          function (err, doc) {
+            if (err) {
+              console.log(`unexpected error`);
+              res.status(400).send("error");
+              return;
+            } else {
+              console.log(`added new post `);
+              console.log(doc);
+              res.status(200).send("worked");
+            }
+          }
+        );
       }
     }
   );
@@ -156,18 +210,6 @@ app.put("/newExercise", async (req, res) => {
 app.put("/removeExercise", async (req, res) => {
   const id = req.body.id;
   const exercise = req.body.exercise;
-
-  // const date = new Date(exercise.date);
-  // try {
-  //   exercise.date = date.toISOString();
-  // } catch (e) {
-  //   if (e instanceof RangeError) {
-  //     res.status(400).send("date not write format");
-  //   } else res.status(400).send("unexpected error");
-  // }
-
-  // exercise.date = mongoose.
-  console.log(req);
 
   userModel.updateOne(
     { _id: id },

@@ -7,18 +7,27 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import Main from "./exercise_data/Main";
 import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
+
+export function userState(state) {
+  return state;
+}
 
 export default function Login() {
   const [username, setUsername] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [loggedin, setLoggedin] = React.useState(false);
+  const [account, setAccount] = React.useState({});
+  const [profile, setProfile] = React.useState({});
   const [info, setInfo] = React.useState(null);
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
     if (loggedin) {
-      navigate("/home", { state: { id: info._id, added: 0 } });
+      navigate("/home", {
+        state: { id: info._id, added: 0, context: account, smContext: profile },
+      });
     }
   }, [loggedin, navigate]);
 
@@ -49,7 +58,33 @@ export default function Login() {
       })
       .then((res) => {
         if (res.status === 200) {
-          setInfo(res.data);
+          // userState({
+          //   username: name,
+          //   password: password,
+          //   privacy: res.data.privacy,
+          //   valid: true,
+          //   exercises: res.data.exercises,
+          // });
+          setAccount({
+            username: name,
+            password: password,
+            privacy: res.data.account.privacy,
+            valid: true,
+            exercises: res.data.account.exercises,
+            profile: {
+              user: res.data.smInfo.user,
+              followers: res.data.smInfo.followers,
+              following: res.data.smInfo.following,
+              privacy: res.data.smInfo.privacy,
+              bio: res.data.smInfo.bio,
+              exercise_type: res.data.smInfo.exercise_type,
+              exercises: res.data.smInfo.exercises,
+              posts: res.data.smInfo.posts,
+            },
+          });
+          setInfo(res.data.account);
+
+          setProfile(res.data.smInfo);
           setLoggedin(true);
         }
         console.log(res);
