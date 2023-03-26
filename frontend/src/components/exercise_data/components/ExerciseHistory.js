@@ -1,40 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { Button } from "@mui/material";
-import { Box } from "@mui/material";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { DateRangePicker } from "rsuite";
+import { Button, Box, MenuItem, Grid, TextField } from "@mui/material";
 import "rsuite/dist/rsuite.min.css";
-import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  ZAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import Plot from "react-plotly.js";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { MenuItem } from "@mui/material";
 
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridValueFormatterParams,
-  GridValueGetterParams,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarExport,
-  GridToolbarDensitySelector,
-  GridColDef,
-} from "@mui/x-data-grid";
+import Plot from "react-plotly.js";
+
+import { DataGrid } from "@mui/x-data-grid";
 import { useLocation } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 
 export default function CustomToolbarGrid() {
   const _id = useLocation().state.id;
@@ -56,7 +29,6 @@ export default function CustomToolbarGrid() {
       .then(
         (res) => {
           if (res.status === 200) {
-            console.log("Excercise deleted");
             window.location.reload(false);
           }
         },
@@ -105,6 +77,7 @@ export default function CustomToolbarGrid() {
 
   var [graph, setGraph] = useState({});
   var [data, setData] = useState([]);
+  var [reps, setReps] = useState([]);
   var first = "";
 
   useEffect(() => {
@@ -114,9 +87,6 @@ export default function CustomToolbarGrid() {
         setData([]);
         var i = 0;
         res.data.forEach((val) => {
-          console.log("val ");
-          console.log(val);
-          console.log(i);
           i += 1;
           delete Object.assign(val, { id: val._id })["_id"];
 
@@ -125,30 +95,54 @@ export default function CustomToolbarGrid() {
               first = val.exercise;
             }
             columns[1].valueOptions.push(val.exercise);
-            graph[val.exercise] = [];
-            graph[val.exercise].push({
-              x: [],
-              y: [],
-              type: "scatter",
-              transforms: [
-                {
-                  type: "sort",
-                  target: "x",
-                  order: "ascending",
-                },
-              ],
-              y0: 0,
-            });
-            console.log(
-              `Adding ${val.exercise} to options ${columns[1].valueOptions}`
-            );
+            graph[val.exercise] = {};
           }
 
-          // graphData = val;
-          // date = new Date(val.date);
-          graph[val.exercise][0].x.push(val.date.slice(0, 10));
-          graph[val.exercise][0].y.push(val.weight);
+          if (!Object.keys(graph[val.exercise]).includes(String(val.reps))) {
+            graph[val.exercise][val.reps] = [
+              {
+                x: [],
+                y: [],
+                type: "scatter",
+                transforms: [
+                  {
+                    type: "sort",
+                    target: "x",
+                    order: "ascending",
+                  },
+                ],
+                y0: 0,
+              },
+            ];
+          }
+
+          // want the greatest weight for each rep on a given data in graph data
+          var setit = true;
+          console.log("length " + graph[val.exercise][val.reps][0].x.length);
+          console.log(graph[val.exercise][val.reps][0].x);
+
+          for (
+            let indx = 0;
+            indx < graph[val.exercise][val.reps][0].x.length;
+            indx += 1
+          ) {
+            if (
+              val.date.slice(0, 10) ==
+                graph[val.exercise][val.reps][0].x[indx] &&
+              val.weight > graph[val.exercise][val.reps][0].y[indx]
+            ) {
+              graph[val.exercise][val.reps][0].y[indx] = val.weight;
+              setit = false;
+              break;
+            }
+          }
+          if (setit) {
+            graph[val.exercise][val.reps][0].x.push(val.date.slice(0, 10));
+            graph[val.exercise][val.reps][0].y.push(val.weight);
+            console.log(graph[val.exercise][val.reps][0]);
+          }
         });
+
         setRows(res.data);
       });
   }, []);
@@ -166,38 +160,67 @@ export default function CustomToolbarGrid() {
       >
         <DataGrid columns={columns} rows={rows} height="100%" width="100%" />
       </Box>
-      <h1 align="left">History Graph</h1>
 
-      <TextField
-        label="Exercise"
-        sx={{
-          width: "200px",
-        }}
-        onChange={(event) => {
-          console.log(`Clicked Graph button data below for all graphs`);
-          console.log(graph);
-          setData(graph[event.target.value]);
-        }}
-        // value={first}
-        select
-      >
-        {Object.keys(graph).map((key) => (
-          <MenuItem value={key}>{key}</MenuItem>
-        ))}
-      </TextField>
+      <h1 align="left" padding="100px">
+        History Graph
+      </h1>
+      <Box sx={{ flexGrow: 1 }} paddingTop="50px" paddingBottom="200px">
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
+          <Grid item>
+            <TextField
+              label="Exercise"
+              sx={{
+                width: "200px",
+              }}
+              onChange={(event) => {
+                setReps(graph[event.target.value]);
+                setData([]);
+              }}
+              // value={first}
+              select
+            >
+              {Object.keys(graph).map((key) => (
+                <MenuItem value={key}>{key}</MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              label="Reps"
+              sx={{
+                width: "200px",
+              }}
+              onChange={(event) => {
+                setData(reps[event.target.value]);
+              }}
+              //value={first}
+              select
+            >
+              {Object.keys(reps).map((key) => (
+                <MenuItem value={key}>{key}</MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item>
+            <Plot
+              align="left"
+              data={data}
+              layout={{
+                // width: 500,
+                // height: 500,
 
-      <Plot
-        align="left"
-        data={data}
-        layout={{
-          // width: 500,
-          // height: 500,
-
-          xaxis: { tickformat: "%B %d", dtick: 24 * 60 * 60 * 1000 },
-          font_family: "Roboto",
-        }}
-        // yaxis={{ range: [0, Math.max(data.y)] }}
-      />
+                xaxis: { tickformat: "%B %d", dtick: 24 * 60 * 60 * 1000 },
+                font_family: "Roboto",
+              }}
+              // yaxis={{ range: [0, Math.max(data.y)] }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
     </>
   );
 }

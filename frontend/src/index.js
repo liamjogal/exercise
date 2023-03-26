@@ -6,6 +6,8 @@ import Login from "./components/Login";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
+//import { store } from "../app/store";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {

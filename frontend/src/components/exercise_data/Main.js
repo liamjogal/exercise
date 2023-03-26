@@ -23,7 +23,8 @@ import History from "./pages/History";
 import Settings from "../user_info/Settings";
 import "../../App.css";
 
-import Profile from "../user_info/profile";
+import Profile from "../user_info/Profile";
+import Edit from "../user_info/Edit";
 import { AccountContext } from "../../context/AccountContext";
 import { useLocation } from "react-router-dom";
 
@@ -121,7 +122,7 @@ function Main() {
                   textDecoration: "none",
                 }}
               >
-                GymRat
+                MyGym
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton

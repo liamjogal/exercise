@@ -2,8 +2,7 @@ import * as React from "react";
 import CustomToolbarGrid from "../components/ExerciseHistory";
 import { Box } from "@mui/material";
 import { Button } from "@mui/material";
-import { Menu } from "@mui/material";
-import { Typography } from "@mui/material";
+
 import { Stack } from "@mui/material";
 import Exercise from "./Exercise";
 

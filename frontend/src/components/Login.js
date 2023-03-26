@@ -5,8 +5,9 @@ import { Stack } from "@mui/system";
 import { blue } from "@mui/material/colors";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
-import Main from "./exercise_data/Main";
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { AccountContext } from "../context/AccountContext";
 import "../App.css";
 
 export function userState(state) {
@@ -19,14 +20,17 @@ export default function Login() {
   const [loggedin, setLoggedin] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const [profile, setProfile] = React.useState({});
-  const [info, setInfo] = React.useState(null);
+  const [context, setContext] = React.useState(AccountContext);
+  const [id, setId] = React.useState(null);
 
   const navigate = useNavigate();
+  //const location = useLocation();
 
   React.useEffect(() => {
     if (loggedin) {
+      console.log("setting state");
       navigate("/home", {
-        state: { id: info._id, added: 0, context: account, smContext: profile },
+        state: { id: id, added: 0, context: account, smContext: profile },
       });
     }
   }, [loggedin, navigate]);
@@ -34,7 +38,7 @@ export default function Login() {
   async function register(name, password) {
     console.log(`trying to register ${name} and ${password}`);
     await axios
-      .post("http://localhost:4000/createUser", {
+      .post("http://localhost:4000/create", {
         name: name,
         password: password,
       })
@@ -46,10 +50,16 @@ export default function Login() {
       });
   }
 
+  // async function login(name, password) {
+  //   await axios.post("http://localhost:4000/login", {
+  //     params: { name: name, password: password },
+  //   });
+  // }
+
   async function login(name, password) {
     console.log(`trying to login ${name} and ${password}`);
     await axios
-      .get("http://localhost:4000/login", {
+      .post("http://localhost:4000/login", {
         params: { name: name, password: password },
       })
       .catch((err) => {
@@ -58,21 +68,15 @@ export default function Login() {
       })
       .then((res) => {
         if (res.status === 200) {
-          // userState({
-          //   username: name,
-          //   password: password,
-          //   privacy: res.data.privacy,
-          //   valid: true,
-          //   exercises: res.data.exercises,
-          // });
+          console.log(res);
           setAccount({
             username: name,
             password: password,
-            privacy: res.data.account.privacy,
+            privacy: res.data.privacy,
             valid: true,
-            exercises: res.data.account.exercises,
+            exercises: res.data.exercises,
             profile: {
-              user: res.data.smInfo.user,
+              user: res.data.username,
               followers: res.data.smInfo.followers,
               following: res.data.smInfo.following,
               privacy: res.data.smInfo.privacy,
@@ -82,8 +86,8 @@ export default function Login() {
               posts: res.data.smInfo.posts,
             },
           });
-          setInfo(res.data.account);
-
+          setId(res.data._id);
+          setContext(account);
           setProfile(res.data.smInfo);
           setLoggedin(true);
         }
@@ -130,7 +134,7 @@ export default function Login() {
           padding: 10,
         }}
       >
-        Only Gains
+        MyGym
       </Typography>
       <Box
         display="flex"

@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const mongodb = require("mongodb");
+const argon2 = require("argon2");
+
 const app = express();
 const port = 4000;
 const corsOrigin = {
@@ -29,14 +30,6 @@ const exerciseSchema = mongoose.Schema({
 });
 
 // Shchema and model for intial registration
-const userSchema = mongoose.Schema({
-  username: String,
-  password: String,
-  privacy: String,
-  exercises: [exerciseSchema],
-});
-
-const userModel = mongoose.model("userModel", userSchema, "logins");
 
 const smSchema = mongoose.Schema({
   user: String,
@@ -51,6 +44,16 @@ const smSchema = mongoose.Schema({
 
 const smModel = mongoose.model("smSchema", smSchema, "sminfo");
 
+const userSchema = mongoose.Schema({
+  username: String,
+  password: String,
+  privacy: String,
+  exercises: [exerciseSchema],
+  smInfo: smSchema,
+});
+
+const userModel = mongoose.model("userModel", userSchema, "logins");
+
 // function to register a user
 function register(name, passw, privStat) {
   const newUser = new userModel({
@@ -58,63 +61,63 @@ function register(name, passw, privStat) {
     password: passw,
     privacy: privStat,
     exercises: [],
+    smInfo: {
+      user: name,
+      followers: [],
+      following: [],
+      privacy: privStat,
+      bio: "Not added",
+      exercise_type: "Not added",
+      exercises: [],
+      posts: [],
+    },
   });
   newUser.save(function (err, model) {
     if (err) console.log(err);
     else console.log(model.username + " was registered");
   });
-  const newSm = new smModel({
-    user: name,
-    followers: [],
-    following: [],
-    privacy: privStat,
-    bio: "Not added",
-    exercise_type: "Not added",
-    exercises: [],
-    posts: [],
-  });
-  newSm.save(function (err, model) {
-    if (err) console.log(err);
-    else console.log(model.user + " smmodel was registered");
-  });
 }
 
-// app.post("/follower", async (req, res) => {})
-
-// REGISTER A USER
-app.post("/createUser", async (req, res) => {
-  const body = req.body;
-  console.log(`body ${body.name}`);
-  userModel.findOne({ username: body.name }).exec((err, person) => {
-    if (err) {
-      res.status(400);
-      return console.log(error);
+app.post("/create", async (req, res) => {
+  let hash;
+  const name = req.body.name;
+  const password = req.body.password;
+  try {
+    hash = argon2.hash(password).then((hash) => {
+      userModel.findOne({ username: name }).exec((err, person) => {
+        if (err) {
+          res.status(400);
+          return console.log(error);
+        }
+        if (person != null) {
+          //console.log("username already in database");
+          res.status(422).send("username already exists");
+          return;
+        } else {
+          register(name, hash, "public");
+          console.log("success");
+          res.status(201).send("sucess");
+          return;
+        }
+      });
+    });
+  } catch (err) {
+    console.log("ERROR " + err);
+    if (err.message.search("duplicate") != -1) {
+      res.json("Username taken");
     }
-    if (person != null) {
-      //console.log("username already in database");
-      res.status(422).send("username already exists");
-      return;
-    } else {
-      register(body.name, body.password, "public");
-      console.log("success");
-      res.status(201).send("sucess");
-      return;
-    }
-  });
+  }
 });
 
-app.get("/createUser", async (req, res) => {
-  res.send("create user api");
-});
-
-app.get("/login", async (req, res) => {
-  //console.log(req);
-  const query = req.query;
-  var data = { account: {}, smInfo: {} };
+app.post("/login", async (req, res) => {
+  console.log(req);
+  const name = req.body.params.name;
+  const password = req.body.params.password;
+  console.log(name);
+  console.log(password);
   userModel
     .findOne({
-      username: query.name,
-      password: query.password,
+      username: name,
     })
     .exec((err, person) => {
       if (err) {
@@ -123,37 +126,25 @@ app.get("/login", async (req, res) => {
       }
       if (person == null) {
         console.log("invalid login");
-        res.status(404).send("user credentials are invalid");
+        res.status(404).send("username not found");
         return;
       } else {
-        console.log(`logged in ${query.name}`);
+        console.log(`logged in ${name}`);
         console.log(person);
-        data.account = person;
+        if (argon2.verify(person.password, password)) {
+          delete person.password;
+          res.json(person);
+        } else {
+          res.json("Password incorrect");
+        }
       }
     });
-  smModel.findOne({ user: query.name }).exec((err, smData) => {
-    if (err) {
-      res.status(400).send(err);
-      return console.log("error");
-    }
-    if (smData == null) {
-      console.log("invalid login");
-      res.status(404).send("user credentials are invalid");
-      return;
-    } else {
-      console.log(`found smData for ${query.name}`);
-      console.log(smData);
-      data.smInfo = smData;
-
-      res.status(200).send(data);
-    }
-  });
 });
 
 app.get("/exercises", async (req, res) => {
   //console.log(req);
   const query = req.query;
-
+  console.log(query);
   userModel.findById(query.id, (err, data) => {
     console.log(data);
     if (err) {

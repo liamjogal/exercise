@@ -4,27 +4,21 @@ import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Select from "@mui/material/Select";
-import { InputLabel } from "@mui/material";
 import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import { Stack } from "@mui/system";
 import { blue } from "@mui/material/colors";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createTheme } from "@mui/material";
 import { Grid } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
-import { GridHeader } from "@mui/x-data-grid";
 
 const theme = createTheme();
 
 theme.spacing(6);
 export default function Exercise() {
-  const navigate = useNavigate();
   const data = useLocation().state;
   const name = useLocation().state.context.profile.user;
-  const num = useLocation().state.added;
+  console.log("username + " + name);
   const [dateInput, setDate] = React.useState(null);
   const [exerciseInput, setExercise] = React.useState(null);
   const [weightInput, setWeight] = React.useState(null);
