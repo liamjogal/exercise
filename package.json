@@ -1,0 +1,20 @@
+{
+  "name": "excercise",
+  "version": "1.0.0",
+  "description": "This app allows one to keep track of their excercise progress.",
+  "main": "index.js",
+  "scripts": {
+    
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liamjogal/exercise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liamjogal/exercise/issues"
+  },
+  "homepage": "https://github.com/liamjogal/exercise#readme"
+}

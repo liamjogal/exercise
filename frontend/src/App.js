@@ -30,8 +30,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login id="login" />} />
-        <Route path="/home" element={<Layout />}>
+        <Route path="" element={<Login id="login" />} />
+        <Route path="home" element={<Layout />}>
           <Route index element={<History id="history" />} />
           <Route index={false} path="friends" element={<Friends />} />
           <Route index={false} path="account" element={<Profile />} />
