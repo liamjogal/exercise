@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { configueStore } from "@reduxjs/toolkit";
 
 export default configueStore({
@@ -42,3 +43,20 @@ export default configueStore({
     },
   },
 });
+=======
+import { configureStore } from "@reduxjs/toolkit";
+import { infoSlice } from "../features/account/infoSlice";
+import { accountApi } from "../features/account/acccountAPI";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { curryGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+export const store = configureStore({
+  reducer: {
+    [accountApi.reducerPath]: accountApi.reducer,
+    info: infoSlice,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(accountApi.middleware),
+  },
+});
+
+setupListeners(store.dispatch);
+>>>>>>> 259ad731179d698176a8948e254af58b6074e9f2
