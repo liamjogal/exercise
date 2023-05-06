@@ -149,7 +149,15 @@ export default function Exercise() {
             >
               <MenuItem value={"Bench"}>Bench</MenuItem>
               <MenuItem value={"Squat"}>Squat</MenuItem>
+
+              <MenuItem value={"Front Squat"}>Front Squat</MenuItem>
               <MenuItem value={"Deadlift"}>Deadlift</MenuItem>
+              <MenuItem value={"Clean"}>Clean</MenuItem>
+              <MenuItem value={"Power Clean"}>Power Clean</MenuItem>
+              <MenuItem value={"Clean and Jerk"}>Clean and Jerk</MenuItem>
+              <MenuItem value={"Jerk"}>Jerk</MenuItem>
+              <MenuItem value={"Snatch"}>Snatch</MenuItem>
+              <MenuItem value={"Power Snatch"}>Power Snatch</MenuItem>
             </TextField>
 
             {/* </Select>
