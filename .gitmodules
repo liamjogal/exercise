@@ -11,6 +11,3 @@
 [submodule "exercise_backend"]
 	path = exercise_backend
 	url = https://github.com/liamjogal/exercise_backend.git
-[submodule "exercise_frontend"]
-	path = exercise_frontend
-	url = https://github.com/liamjogal/exercise_frontend.git
