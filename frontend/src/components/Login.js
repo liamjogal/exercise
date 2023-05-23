@@ -8,34 +8,48 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { AccountContext } from "../context/AccountContext";
+import store from "../app/store";
+import { useDispatch } from "react-redux";
 import "../App.css";
+import {
+  setId,
+  setUsername,
+  setPassword,
+  setPrivacy,
+  setBio,
+  setExercisetype,
+  setExercises,
+  setPosts,
+} from "../features/info/infoSlice";
 
 export function userState(state) {
   return state;
 }
 
 export default function Login() {
-  const [username, setUsername] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
+  const [nameInput, setnameInput] = React.useState(null);
+  const [passwordInput, setpasswordInput] = React.useState(null);
   const [loggedin, setLoggedin] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const [profile, setProfile] = React.useState({});
   const [context, setContext] = React.useState(AccountContext);
-  const [id, setId] = React.useState(null);
+  // const [id, setId] = React.useState(null);
+  var id = null;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   //const location = useLocation();
 
   React.useEffect(() => {
     if (loggedin) {
       console.log("setting state");
       navigate("/home", {
-        state: { id: id, added: 0, context: account, smContext: profile },
+        state: { id: id },
       });
     }
   }, [loggedin, navigate]);
 
-  async function register(name, password) {
+  const register = async (name, password) => {
     console.log(`trying to register ${name} and ${password}`);
     await axios
       .post("http://localhost:4000/create", {
@@ -48,15 +62,9 @@ export default function Login() {
       .then((res, err) => {
         if (err && res.status === 422) alert(res.data);
       });
-  }
+  };
 
-  // async function login(name, password) {
-  //   await axios.post("http://localhost:4000/login", {
-  //     params: { name: name, password: password },
-  //   });
-  // }
-
-  async function login(name, password) {
+  const login = async (name, password) => {
     console.log(`trying to login ${name} and ${password}`);
     await axios
       .post("http://localhost:4000/login", {
@@ -68,49 +76,42 @@ export default function Login() {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res);
-          setAccount({
-            username: name,
-            password: password,
-            privacy: res.data.privacy,
-            valid: true,
-            exercises: res.data.exercises,
-            profile: {
-              user: res.data.username,
-              followers: res.data.smInfo.followers,
-              following: res.data.smInfo.following,
-              privacy: res.data.smInfo.privacy,
-              bio: res.data.smInfo.bio,
-              exercise_type: res.data.smInfo.exercise_type,
-              exercises: res.data.smInfo.exercises,
-              posts: res.data.smInfo.posts,
-            },
+          dispatch(setId(res.data._id));
+          dispatch(setUsername(res.data.username));
+          dispatch(setPassword(password));
+          dispatch(setPrivacy(res.data.smInfo.privacy));
+          dispatch(setBio(res.data.smInfo.bio));
+          dispatch(setExercisetype(res.data.smInfo.exercise_type));
+          res.data.exercises.forEach((val) => {
+            delete Object.assign(val, { id: val._id })["_id"];
           });
-          setId(res.data._id);
-          setContext(account);
-          setProfile(res.data.smInfo);
+          console.log(res.data.exercises);
+          dispatch(setExercises(res.data.exercises));
+          console.log(res.data.exercises);
+          dispatch(setPosts(res.data.smInfo.posts));
+          id = res.data.id;
           setLoggedin(true);
         }
         console.log(res);
       });
-  }
-
-  const handleUsername = (event) => {
-    setUsername(event.target.value);
-    console.log(username);
   };
 
-  const handlePassword = (event) => {
-    setPassword(event.target.value);
-    console.log(password);
+  const handlenameInput = (event) => {
+    setnameInput(event.target.value);
+    console.log(nameInput);
+  };
+
+  const handlepasswordInput = (event) => {
+    setpasswordInput(event.target.value);
+    console.log(passwordInput);
   };
 
   const handleRegistration = (event) => {
-    register(username, password);
+    register(nameInput, passwordInput);
   };
 
   const handleLogin = (event) => {
-    login(username, password);
+    login(nameInput, passwordInput);
   };
 
   return (
@@ -157,13 +158,13 @@ export default function Login() {
             id="username-input"
             label="Username"
             variant="outlined"
-            onChange={handleUsername}
+            onChange={handlenameInput}
           />
           <TextField
             id="password-input"
             label="Password"
             variant="outlined"
-            onChange={handlePassword}
+            onChange={handlepasswordInput}
           />
           <Button sx={{ color: blue[800] }} onClick={handleLogin}>
             Login

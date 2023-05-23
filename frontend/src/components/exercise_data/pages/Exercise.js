@@ -7,17 +7,26 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Box } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import { blue } from "@mui/material/colors";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createTheme } from "@mui/material";
 import { Grid } from "@mui/material";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { pushExercise } from "../../../features/info/infoSlice";
+import ExerciseHistory from "../components/ExerciseHistory";
+import { useState } from "react";
 
 const theme = createTheme();
 
 theme.spacing(6);
 export default function Exercise() {
-  const data = useLocation().state;
-  const name = useLocation().state.context.profile.user;
+  const exercises = useSelector((state) => state.info.exercises);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state);
+  const _id = useSelector((state) => state.info.id);
+  const name = useSelector((state) => state.info.username);
   console.log("username + " + name);
   const [dateInput, setDate] = React.useState(null);
   const [exerciseInput, setExercise] = React.useState(null);
@@ -31,20 +40,36 @@ export default function Exercise() {
   };
 
   const handleWeight = (event) => {
-    setWeight(event.currentTarget.value);
+    setWeight(Number(event.currentTarget.value));
   };
 
   const handleReps = (event) => {
-    setReps(event.currentTarget.value);
+    setReps(Number(event.currentTarget.value));
   };
 
   const handleSets = (event) => {
-    setSets(event.currentTarget.value);
+    setSets(Number(event.currentTarget.value));
   };
 
   const Confirmation = () => {
     return <h1>Entry Submitted Successfully</h1>;
   };
+
+  // call to retrieve exercises to get id for datagrid
+  // const getExercises = async () => {
+  //   await axios.get("http://localhost:4000/exercises").then(
+  //     (res) => {
+  //       let toset = res.data;
+  //       toset.forEach((val) => {
+  //         delete Object.assign(val, { id: val._id })["_id"];
+  //       });
+  //       setExercises
+  //     },
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  // };
 
   const sendData = async () => {
     if (
@@ -59,7 +84,7 @@ export default function Exercise() {
     }
     await axios
       .put("http://localhost:4000/newExercise", {
-        id: data.id,
+        id: _id,
         user: name,
         exercise: {
           date: dateInput,
@@ -73,7 +98,16 @@ export default function Exercise() {
         (res) => {
           console.log(res);
           setConfirmed(true);
-          window.location.reload(false);
+          let todispatch = res.data;
+          todispatch.weight = Number(todispatch.weight);
+          todispatch.reps = Number(todispatch.reps);
+          todispatch.sets = Number(todispatch.sets);
+          //delete Object.assign(todispatch, { id: todispatch._id })["_id"];
+          // setExercises(dispatch(pushExercise(todispatch)));
+
+          console.log(exercises);
+
+          //window.location.reload(false);
         },
         (err) => {
           // Will be an error if in 10000 or more than more than 2 decimal points
@@ -84,17 +118,19 @@ export default function Exercise() {
           setConfirmed(false);
         }
       );
-
-    // TODO use then to handle api req error
-    // axios
   };
 
   return (
     <>
-      <h1 align="left" padding="100px">
+      <h1 align="Center" padding="100px" id="newExercise">
         New Exercise
       </h1>
-      <Box sx={{ flexGrow: 1 }} paddingTop="50px" paddingBottom="200px">
+      <Box
+        sx={{ flexGrow: 1 }}
+        paddingTop="50px"
+        paddingBottom="200px"
+        m="auto"
+      >
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}

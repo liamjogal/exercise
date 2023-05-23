@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  _id: null,
+  id: null,
   username: "",
   password: "",
   followers: 0,
@@ -9,7 +9,7 @@ const initialState = {
   privacy: "",
   bio: "",
   exercise_type: "",
-  exercises: "",
+  exercises: {},
   posts: 0,
 };
 
@@ -18,39 +18,54 @@ export const infoSlice = createSlice({
   initialState,
   reducers: {
     setId: (state, action) => {
-      state._id = action.payload;
+      state.id = action.payload;
+      return state;
     },
     setUsername: (state, action) => {
       state.username = action.payload;
+      return state;
     },
 
     setPassword: (state, action) => {
       state.password = action.payload;
+      return state;
     },
 
     setPrivacy: (state, action) => {
       state.privacy = action.payload;
+      return state;
     },
 
     setBio: (state, action) => {
       state.bio = action.payload;
+      return state;
     },
 
     setExercisetype: (state, action) => {
       state.exercise_type = action.payload;
+      return state;
     },
 
     setExercises: (state, action) => {
       state.exercises = action.payload;
+      return state;
+    },
+
+    pushExercise: (state, action) => {
+      state.exercises.push(action.payload);
+      return state;
     },
 
     setPosts: (state, action) => {
       state.posts = action.payload;
+      return state;
     },
   },
 });
 
 export const {
+  setId,
+  pushExercise,
   setUsername,
   setPassword,
   setPrivacy,
