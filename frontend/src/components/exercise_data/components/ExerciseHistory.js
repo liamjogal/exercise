@@ -11,8 +11,8 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LineChart from "./LineChart";
 export default function ExerciseHistory() {
-  const _id = useSelector((state) => state.info.id);
-  const exercises = useSelector((state) => state.info.exercises);
+  const _id = useSelector((state) => state.id);
+  const exercises = useSelector((state) => state.exercises);
   console.log(exercises);
   const [data, setData] = useState({});
   var [graphData, handleGraphData] = useState([]);

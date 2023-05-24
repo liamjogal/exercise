@@ -7,6 +7,8 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
 import store from "./app/store";
+import { persistor } from "./app/store";
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 
 // const router = createBrowserRouter([
@@ -19,7 +21,9 @@ import { Provider } from "react-redux";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <App />
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>
 );
 

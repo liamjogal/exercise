@@ -21,12 +21,14 @@ const theme = createTheme();
 
 theme.spacing(6);
 export default function Exercise() {
-  const exercises = useSelector((state) => state.info.exercises);
+  const data = useSelector((state) => state);
+  console.log(data);
+  const exercises = useSelector((state) => state.exercises);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const data = useSelector((state) => state);
-  const _id = useSelector((state) => state.info.id);
-  const name = useSelector((state) => state.info.username);
+
+  const _id = useSelector((state) => state.id);
+  const name = useSelector((state) => state.username);
   console.log("username + " + name);
   const [dateInput, setDate] = React.useState(null);
   const [exerciseInput, setExercise] = React.useState(null);
