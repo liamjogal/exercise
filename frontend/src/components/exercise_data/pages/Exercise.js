@@ -100,12 +100,23 @@ export default function Exercise() {
         (res) => {
           console.log(res);
           setConfirmed(true);
-          let todispatch = res.data;
+
+          // potential implementation is to get all exercises and then dispatch the last one
+          // const gotten = await axios.get
+          let todispatch = {
+            // need to change and be able to figure out how exactly to get the id in mongo db, most likely need to adjust the backend
+            id: res.data._id,
+            date: dateInput,
+            exercise: exerciseInput,
+            weight: weightInput,
+            reps: repsInput,
+            sets: setsInput,
+          };
           todispatch.weight = Number(todispatch.weight);
           todispatch.reps = Number(todispatch.reps);
           todispatch.sets = Number(todispatch.sets);
           //delete Object.assign(todispatch, { id: todispatch._id })["_id"];
-          // setExercises(dispatch(pushExercise(todispatch)));
+          dispatch(pushExercise(todispatch));
 
           console.log(exercises);
 
@@ -137,6 +148,7 @@ export default function Exercise() {
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
+          justifyContent="center"
         >
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

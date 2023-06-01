@@ -1,30 +1,94 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { Button, Box, MenuItem, Grid, TextField } from "@mui/material";
+import {
+  Button,
+  Box,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  Grid,
+  TextField,
+} from "@mui/material";
+import { popExercise } from "../../../features/info/infoSlice";
 import "rsuite/dist/rsuite.min.css";
 
-import Plot from "react-plotly.js";
-
-import { DataGrid } from "@mui/x-data-grid";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useSelector, useDispatch } from "react-redux";
 import LineChart from "./LineChart";
 export default function ExerciseHistory() {
+  const dispatch = useDispatch();
   const _id = useSelector((state) => state.id);
   const exercises = useSelector((state) => state.exercises);
-  console.log(exercises);
-  const [data, setData] = useState({});
-  var [graphData, handleGraphData] = useState([]);
-  if (exercises.length > 0) {
-    const firstExericse = exercises[0].exercise;
-    const firstReps = exercises[0].reps;
-    graphData = exercises.filter(
-      (element) =>
-        element.exercise === firstExericse && element.reps === firstReps
+  var [graphData, setGraphData] = useState([]);
+  const [xs, setXs] = useState([]);
+  const [ys, setYs] = useState([]);
+  const [x, setX] = useState("");
+  const [y, setY] = useState("");
+  useEffect(() => {
+    if (exercises.length > 0) {
+      const firstExercise = exercises[0].exercise;
+      const firstReps = exercises[0].reps;
+
+      setGraphData(
+        exercises.filter(
+          (element) =>
+            element.exercise === firstExercise && element.reps === firstReps
+        )
+      );
+      let xloc = [];
+      let yloc = [];
+      for (let elem in exercises) {
+        if (!xloc.includes(exercises[elem].exercise)) {
+          xloc.push(exercises[elem].exercise);
+        }
+        if (
+          exercises[elem].exercise === firstExercise &&
+          !yloc.includes(exercises[elem].reps)
+        ) {
+          yloc.push(exercises[elem].reps);
+        }
+      }
+      setX(firstExercise);
+      setY(firstReps);
+      setXs(xloc);
+      setYs(yloc);
+
+      console.log(xs);
+      console.log(ys);
+    } else {
+    }
+  }, [exercises]);
+
+  const handleXChange = (val) => {
+    setX(val.target.value);
+    let yloc = [];
+
+    console.log(val);
+    for (let elem in exercises) {
+      if (
+        exercises[elem].exercise === val.target.value &&
+        !yloc.includes(exercises[elem].reps)
+      ) {
+        yloc.push(exercises[elem].reps);
+      }
+    }
+    console.log(yloc);
+    setYs(yloc);
+  };
+
+  const handleGraphData = (val) => {
+    setY(val.target.value);
+    console.log(val.target.values);
+    console.log(x);
+    setGraphData(
+      exercises.filter(
+        (element) => element.exercise === x && element.reps === val.target.value
+      )
     );
-  } else {
-  }
+    console.log(graphData);
+  };
 
   const deleteOnClick = async (row) => {
     await axios
@@ -42,11 +106,13 @@ export default function ExerciseHistory() {
       .then(
         (res) => {
           if (res.status === 200) {
-            //   window.location.reload(false);
+            dispatch(popExercise(row));
           }
         },
         (err) => {
-          alert(`error deleting exercise error: ${err}`);
+          alert(
+            `An error was made deleting the exercise. This may have been deleted earlier so try logging back in!`
+          );
         }
       );
   };
@@ -90,8 +156,8 @@ export default function ExerciseHistory() {
       field: "exercise",
       headerName: "Exercise",
       flex: 1,
-      type: "singleSelect",
-      valueOptions: [],
+      // type: "singleSelect",
+
       editable: true,
     },
     { field: "weight", headerName: "Weight", flex: 1, editable: true },
@@ -127,10 +193,6 @@ export default function ExerciseHistory() {
     },
   ]);
 
-  useEffect(() => {
-    setData(exercises);
-  }, []);
-
   return (
     <>
       <h1 align="Center" padding="100px">
@@ -149,15 +211,67 @@ export default function ExerciseHistory() {
       >
         <DataGrid
           columns={columns}
-          rows={graphData}
+          rows={exercises}
           height="100%"
           width="100%"
+          // slots={{ toolbar: GridToolbar }}
         />
       </Box>
 
       <h1 align="Center" padding="100px">
         History Graph
       </h1>
+      <Box
+        sx={{ flexGrow: 1 }}
+        paddingTop="50px"
+        paddingBottom="200px"
+        m="auto"
+      >
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          justifyContent="center"
+        >
+          <Grid item>
+            <FormControl>
+              <InputLabel id="xAxis-label">Exercise:</InputLabel>
+              <Select
+                labelId="xAxis-label"
+                id="xAxis"
+                value={x}
+                onChange={(val) => {
+                  handleXChange(val);
+                }}
+                width={"30%"}
+              >
+                {xs.map((value) => {
+                  console.log(value);
+                  return <MenuItem value={value}>{value}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl>
+              <InputLabel id="yAxis-label">Reps:</InputLabel>
+              <Select
+                labelId="yAxis-label"
+                id="yAxis"
+                value={y}
+                onChange={(val) => {
+                  handleGraphData(val);
+                }}
+                width={"30%"}
+              >
+                {ys.map((value) => {
+                  return <MenuItem value={value}>{value}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Box>
       <LineChart data={graphData}></LineChart>
     </>
   );

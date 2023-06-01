@@ -73,7 +73,7 @@ export default function Nav() {
               textDecoration: "none",
             }}
           >
-            GymRat
+            MyGym
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
@@ -82,7 +82,7 @@ export default function Nav() {
               // TODO FIX onClick={handlePageChange}
               sx={{ my: 2, color: blue[800] }}
             >
-              My Exercise
+              Exercise History
             </Button>
             <Button
               id="Friends"

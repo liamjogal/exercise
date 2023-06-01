@@ -9,7 +9,7 @@ const initialState = {
   privacy: "",
   bio: "",
   exercise_type: "",
-  exercises: {},
+  exercises: [],
   posts: 0,
 };
 
@@ -56,6 +56,11 @@ export const infoSlice = createSlice({
       return state;
     },
 
+    popExercise: (state, action) => {
+      state.exercises.pop(action.payload);
+      return state;
+    },
+
     setPosts: (state, action) => {
       state.posts = action.payload;
       return state;
@@ -66,6 +71,7 @@ export const infoSlice = createSlice({
 export const {
   setId,
   pushExercise,
+  popExercise,
   setUsername,
   setPassword,
   setPrivacy,
