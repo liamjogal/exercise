@@ -1,6 +1,4 @@
 import {
-  ScatterChart,
-  Scatter,
   Label,
   LineChart,
   Line,
@@ -13,16 +11,30 @@ import {
 
 import moment from "moment";
 
-import { useSelector } from "react-redux";
-
 export default function ExerciseLineChart(props) {
   var propsCopy = JSON.parse(JSON.stringify(props));
-  console.log(propsCopy);
 
   propsCopy.data.forEach((element) => {
     element.numdate = new Date(element.date).getTime();
   });
-  console.log(propsCopy);
+  propsCopy.data = propsCopy.data.sort((ent1, ent2) =>
+    ent1.date < ent2.date ? -1 : ent1.date > ent2.date ? 1 : 0
+  );
+
+  var biggest = {};
+
+  propsCopy.data.forEach((entry) => {
+    if (
+      biggest.hasOwnProperty(String(entry.date)) &&
+      entry.weight > biggest[entry.date]
+    ) {
+      biggest[String(entry.date)] = entry;
+    } else if (!biggest.hasOwnProperty(String(entry.date))) {
+      biggest[String(entry.date)] = entry;
+    }
+  });
+
+  propsCopy.data = Object.values(biggest);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {

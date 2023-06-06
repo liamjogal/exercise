@@ -112,13 +112,13 @@ export default function Exercise() {
             reps: repsInput,
             sets: setsInput,
           };
+          console.log(dateInput.toString());
+          todispatch.date = dateInput.toString();
           todispatch.weight = Number(todispatch.weight);
           todispatch.reps = Number(todispatch.reps);
           todispatch.sets = Number(todispatch.sets);
           //delete Object.assign(todispatch, { id: todispatch._id })["_id"];
           dispatch(pushExercise(todispatch));
-
-          console.log(exercises);
 
           //window.location.reload(false);
         },
@@ -158,6 +158,7 @@ export default function Exercise() {
                 value={dateInput}
                 onChange={(newValue) => {
                   setDate(newValue);
+                  console.log(newValue["$d"].toString());
                 }}
                 renderInput={(params) => (
                   <TextField

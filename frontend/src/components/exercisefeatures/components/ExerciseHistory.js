@@ -9,18 +9,18 @@ import {
   InputLabel,
   Select,
   Grid,
-  TextField,
 } from "@mui/material";
 import { popExercise } from "../../../features/info/infoSlice";
 import "rsuite/dist/rsuite.min.css";
 
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useSelector, useDispatch } from "react-redux";
 import LineChart from "./LineChart";
 export default function ExerciseHistory() {
   const dispatch = useDispatch();
   const _id = useSelector((state) => state.id);
   const exercises = useSelector((state) => state.exercises);
+  console.log(exercises);
   var [graphData, setGraphData] = useState([]);
   const [xs, setXs] = useState([]);
   const [ys, setYs] = useState([]);
@@ -81,7 +81,6 @@ export default function ExerciseHistory() {
   const handleGraphData = (val) => {
     setY(val.target.value);
     console.log(val.target.values);
-    console.log(x);
     setGraphData(
       exercises.filter(
         (element) => element.exercise === x && element.reps === val.target.value

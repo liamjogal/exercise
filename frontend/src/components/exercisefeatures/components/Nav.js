@@ -13,9 +13,32 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { blue } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 export default function Nav() {
+  const navigate = useNavigate();
+  const id = useSelector((state) => state.id);
   const ref = React.useRef();
+
+  const [chat, setChat] = useState(false);
+
+  // React.useEffect(() => {
+  //   if (chat) {
+  //     navigate("/home/chat", { state: { id: id } });
+  //   }
+  // }, [navigate, chat]);
+
+  const handlePageChange = (event) => {
+    console.log(event);
+    if (event.target.id === "Chat") {
+      navigate("/home/chat", { state: { id: id } });
+    } else {
+      navigate("/home", { state: { id: id } });
+    }
+  };
+
   return (
     <AppBar
       id="menu-nav-bar"
@@ -78,19 +101,18 @@ export default function Nav() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               id="History"
-              key="fbutt"
-              // TODO FIX onClick={handlePageChange}
+              onClick={handlePageChange}
               sx={{ my: 2, color: blue[800] }}
             >
               Exercise History
             </Button>
             <Button
-              id="Friends"
-              key="fbutt"
-              // TODO FIX onClick={handlePageChange}
+              id="Chat"
+              //onClick={setChat(true)}
+              onClick={handlePageChange}
               sx={{ my: 2, color: blue[800] }}
             >
-              Friends
+              Chat
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }} ref={ref}>
