@@ -54,9 +54,6 @@ export default function ExerciseHistory() {
       setY(firstReps);
       setXs(xloc);
       setYs(yloc);
-
-      console.log(xs);
-      console.log(ys);
     } else {
     }
   }, [exercises]);
@@ -74,19 +71,16 @@ export default function ExerciseHistory() {
         yloc.push(exercises[elem].reps);
       }
     }
-    console.log(yloc);
     setYs(yloc);
   };
 
   const handleGraphData = (val) => {
     setY(val.target.value);
-    console.log(val.target.values);
     setGraphData(
       exercises.filter(
         (element) => element.exercise === x && element.reps === val.target.value
       )
     );
-    console.log(graphData);
   };
 
   const deleteOnClick = async (row) => {
@@ -105,7 +99,10 @@ export default function ExerciseHistory() {
       .then(
         (res) => {
           if (res.status === 200) {
+            console.log(exercises);
             dispatch(popExercise(row));
+            console.log(exercises);
+            //window.location.reload(false);
           }
         },
         (err) => {

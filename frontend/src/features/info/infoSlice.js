@@ -58,6 +58,7 @@ export const infoSlice = createSlice({
 
     popExercise: (state, action) => {
       state.exercises.pop(action.payload);
+      console.log(state);
       return state;
     },
 

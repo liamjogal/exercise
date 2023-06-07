@@ -7,22 +7,25 @@ import axios from "axios";
 export default function Chat() {
   // var [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
+  var [messages, setMessages] = useState([]);
 
   const handleSubmit = async () => {
     console.log(input);
-    setMessages([...messages, { position: "right", text: input }]);
-    const res = await axios
-      .get("localhost:4000/idea", { question: input })
-      .then(
-        (res) => {
-          console.log(res);
-          setMessages([...messages, { position: "right", text: res }]);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    messages.push({ position: "right", text: input });
+    // setMessages([...messages, { position: "right", text: input }]);
+    await axios.get(`http://localhost:4000/idea?req=${input}`).then(
+      (res) => {
+        console.log(res);
+        setMessages([
+          ...messages,
+          { position: "left", text: res.data.content },
+        ]);
+        // messages.push({ position: "left", text: res.data.content });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   };
   return (
     <>
