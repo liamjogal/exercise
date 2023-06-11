@@ -85,9 +85,7 @@ export default function Login() {
           res.data.exercises.forEach((val) => {
             delete Object.assign(val, { id: val._id })["_id"];
           });
-          console.log(res.data.exercises);
           dispatch(setExercises(res.data.exercises));
-          console.log(res.data.exercises);
           dispatch(setPosts(res.data.smInfo.posts));
           id = res.data.id;
           setLoggedin(true);

@@ -10,7 +10,10 @@ import {
   Select,
   Grid,
 } from "@mui/material";
-import { popExercise } from "../../../features/info/infoSlice";
+import {
+  removeExercise,
+  updateExercise,
+} from "../../../features/info/infoSlice";
 import "rsuite/dist/rsuite.min.css";
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -20,7 +23,6 @@ export default function ExerciseHistory() {
   const dispatch = useDispatch();
   const _id = useSelector((state) => state.id);
   const exercises = useSelector((state) => state.exercises);
-  console.log(exercises);
   var [graphData, setGraphData] = useState([]);
   const [xs, setXs] = useState([]);
   const [ys, setYs] = useState([]);
@@ -99,10 +101,14 @@ export default function ExerciseHistory() {
       .then(
         (res) => {
           if (res.status === 200) {
+            console.log("Exercises before pop");
+
             console.log(exercises);
-            dispatch(popExercise(row));
+
+            dispatch(removeExercise(row.id));
+            console.log("Exercises after pop reload");
             console.log(exercises);
-            //window.location.reload(false);
+            //window.location.reload();
           }
         },
         (err) => {
@@ -129,8 +135,12 @@ export default function ExerciseHistory() {
       })
       .then(
         (res) => {
-          if (res.status === 200) {
+          console.log(res.status);
+          if (res.status === 201) {
             //   window.location.reload(false);
+            console.log(row);
+            dispatch(updateExercise(row));
+            console.log(exercises);
           }
         },
         (err) => {
@@ -138,6 +148,7 @@ export default function ExerciseHistory() {
         }
       );
   };
+
   const [columns] = useState([
     {
       field: "date",

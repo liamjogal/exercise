@@ -53,12 +53,38 @@ export const infoSlice = createSlice({
 
     pushExercise: (state, action) => {
       state.exercises.push(action.payload);
+      // for(let i = 0; )
       return state;
     },
 
-    popExercise: (state, action) => {
-      state.exercises.pop(action.payload);
-      console.log(state);
+    removeExercise: (state, action) => {
+      let newExercises = [];
+      console.log(state.exercises);
+      for (let i = 0; i < state.exercises.length; i++) {
+        if (state.exercises[i].id !== action.payload) {
+          newExercises.push(state.exercises[i]);
+        }
+      }
+      // state.exercises.remo(action.payload);
+      // console.log(state);
+      state.exercises = newExercises;
+      console.log(state.exercises);
+      return state;
+    },
+
+    updateExercise: (state, action) => {
+      let newExercises = [];
+      console.log(state.exercises);
+      for (let i = 0; i < state.exercises.length; i++) {
+        if (state.exercises[i].id === action.payload.id) {
+          state.exercises[i] = action.payload;
+          break;
+        }
+      }
+      // state.exercises.remo(action.payload);
+      // console.log(state);
+
+      console.log(state.exercises);
       return state;
     },
 
@@ -72,7 +98,8 @@ export const infoSlice = createSlice({
 export const {
   setId,
   pushExercise,
-  popExercise,
+  removeExercise,
+  updateExercise,
   setUsername,
   setPassword,
   setPrivacy,

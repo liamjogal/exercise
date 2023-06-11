@@ -14,19 +14,21 @@ import moment from "moment";
 export default function ExerciseLineChart(props) {
   var propsCopy = JSON.parse(JSON.stringify(props));
 
+  console.log(propsCopy.data);
   propsCopy.data.forEach((element) => {
     element.numdate = new Date(element.date).getTime();
   });
   propsCopy.data = propsCopy.data.sort((ent1, ent2) =>
-    ent1.date < ent2.date ? -1 : ent1.date > ent2.date ? 1 : 0
+    ent1.numdate < ent2.numdate ? -1 : ent1.numdate > ent2.numdate ? 1 : 0
   );
+  console.log(propsCopy.data);
 
   var biggest = {};
 
   propsCopy.data.forEach((entry) => {
     if (
       biggest.hasOwnProperty(String(entry.date)) &&
-      entry.weight > biggest[entry.date]
+      entry.weight > biggest[entry.date].weight
     ) {
       biggest[String(entry.date)] = entry;
     } else if (!biggest.hasOwnProperty(String(entry.date))) {
@@ -35,6 +37,7 @@ export default function ExerciseLineChart(props) {
   });
 
   propsCopy.data = Object.values(biggest);
+  console.log(propsCopy.data);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
