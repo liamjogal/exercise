@@ -85,7 +85,7 @@ export default function Exercise() {
       return;
     }
     await axios
-      .put("http://localhost:4000/newExercise", {
+      .post("http://localhost:4000/exercises", {
         id: _id,
         user: name,
         exercise: {

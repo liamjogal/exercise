@@ -87,15 +87,17 @@ export default function ExerciseHistory() {
 
   const deleteOnClick = async (row) => {
     await axios
-      .put("http://localhost:4000/removeExercise", {
-        id: _id,
-        exercise: {
-          date: row.date,
-          exercise: row.exercise,
-          weight: row.weight,
-          reps: row.reps,
-          sets: row.sets,
-          _id: row.id,
+      .delete("http://localhost:4000/exercises", {
+        params: {
+          id: _id,
+          exercise: {
+            date: row.date,
+            exercise: row.exercise,
+            weight: row.weight,
+            reps: row.reps,
+            sets: row.sets,
+            _id: row.id,
+          },
         },
       })
       .then(
@@ -112,9 +114,7 @@ export default function ExerciseHistory() {
           }
         },
         (err) => {
-          alert(
-            `An error was made deleting the exercise. This may have been deleted earlier so try logging back in!`
-          );
+          alert(`An error was made deleting the exercise.`);
         }
       );
   };
@@ -122,7 +122,7 @@ export default function ExerciseHistory() {
   const updateOnClick = async (row) => {
     console.log(row);
     await axios
-      .put("http://localhost:4000/updateExercise", {
+      .put("http://localhost:4000/exercises", {
         id: _id,
         exercise: {
           date: row.date,
