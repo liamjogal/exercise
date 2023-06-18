@@ -2,55 +2,51 @@ import "react-chat-elements/dist/main.css";
 import { MessageBox, MessageList } from "react-chat-elements";
 import { Input } from "react-chat-elements";
 import { Button } from "react-chat-elements";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 export default function Chat() {
   // var [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   var [messages, setMessages] = useState([]);
 
-  const handleSubmit = async () => {
-    console.log(input);
-    messages.push({ position: "right", text: input });
-    // setMessages([...messages, { position: "right", text: input }]);
-    await axios.get(`http://localhost:4000/idea?req=${input}`).then(
-      (res) => {
-        console.log(res);
-        setMessages([
-          ...messages,
-          { position: "left", text: res.data.content },
-        ]);
-        // messages.push({ position: "left", text: res.data.content });
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
-  };
+  const [send, setSend] = useState(0);
+
+  useEffect(() => {
+    const fetchGPT = async () => {
+      const response = await fetch(`http://localhost:4000/idea?req=${input}`);
+      const data = await response.json();
+      setMessages((prevChatLog) => [
+        ...prevChatLog,
+        {
+          position: "left",
+          type: "text",
+          text: data.content,
+        },
+      ]);
+      console.log(data);
+    };
+    if (input !== "") {
+      setMessages([
+        ...messages,
+        {
+          position: "right",
+          type: "text",
+          title: "You",
+          text: input,
+        },
+      ]);
+      fetchGPT();
+    }
+  }, [send]);
+
   return (
     <>
-      {messages.map((val) => {
-        console.log(val);
-        if (val.position === "left") {
-          return (
-            <MessageBox
-              position={"left"}
-              type={"text"}
-              title={"ChatGPT"}
-              text={val.text}
-            />
-          );
-        } else {
-          return (
-            <MessageBox
-              position={"right"}
-              type={"text"}
-              title={"You"}
-              text={val.text}
-            />
-          );
-        }
-      })}
+      <MessageList
+        className="message-list"
+        // toBottomHeight={"100%"}
+        lockable={true}
+        dataSource={messages}
+      />
       <div style={{ position: "fixed", bottom: "0%", right: "20%" }}>
         <Input
           placeholder="Type here..."
@@ -59,12 +55,18 @@ export default function Chat() {
             setInput(val.target.value);
             console.log(input);
           }}
+          rightButtons={
+            <Button
+              text={"Send"}
+              onClick={() => {
+                setSend(send + 1);
+              }}
+            >
+              Send
+            </Button>
+          }
         />
       </div>
-      <div style={{ position: "fixed", bottom: "0%", right: "15%" }}>
-        <Button text={"Send"} onClick={handleSubmit} title="Send" />
-      </div>
-      ;
     </>
   );
 }

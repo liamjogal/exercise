@@ -172,23 +172,8 @@ export default function Exercise() {
             </LocalizationProvider>
           </Grid>
           <Grid item>
-            {/* <InputLabel id="select-label">Exercise</InputLabel>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <Select
-                labelId="select-label"
-                id="exercise-input"
-                value={exerciseInput}
-                label="Exercise"
-                onChange={handleExercise}
-                sx={{
-                  flex: 1,
-                }}
-              > */}
-
             <TextField
-              // style={{ width: "100%" }}
               variant="outlined"
-              // labelId="select-label"
               id="exercise-input"
               value={exerciseInput}
               label="Exercise"
@@ -266,6 +251,126 @@ export default function Exercise() {
           {/* <h1></h1> */}
           <Grid item>
             <Button
+              id="newbutton"
+              variant="outlined"
+              sx={{ color: blue[800], width: "100%", height: "100%" }}
+              fullWidth
+              max
+              onClick={sendData}
+            >
+              Submit Entry
+            </Button>
+          </Grid>
+
+          <h1></h1>
+          {/* {confirmed && <Confirmation></Confirmation>} */}
+        </Grid>
+      </Box>
+
+      <h1 align="Center" padding="100px" id="newExercise">
+        Custom Exercise
+      </h1>
+      <Box
+        sx={{ flexGrow: 1 }}
+        paddingTop="50px"
+        paddingBottom="200px"
+        m="auto"
+      >
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          justifyContent="center"
+        >
+          <Grid item>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Pick a Date"
+                ope
+                value={dateInput}
+                onChange={(newValue) => {
+                  setDate(newValue);
+                  console.log(newValue["$d"].toString());
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{
+                      flex: 1,
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="outlined"
+              id="exercise-input"
+              value={exerciseInput}
+              label="Exercise"
+              onChange={handleExercise}
+              sx={{
+                width: "200px",
+              }}
+            />
+
+            {/* </Select>
+            </FormControl> */}
+          </Grid>
+          {/* <h1></h1> */}
+
+          {/* <Box display="flex" alignItems="center" justifyContent="center">
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={{ xs: 2, sm: 2, md: 4 }}
+              align
+              items="center"
+              alignContent="center"
+            > */}
+
+          <Grid item>
+            <TextField
+              id="weight-input"
+              label="Weight (lbs)"
+              variant="outlined"
+              onChange={handleWeight}
+              sx={{
+                flex: 1,
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="reps-input"
+              label="Reps"
+              variant="outlined"
+              onChange={handleReps}
+              input="number"
+              sx={{
+                flex: 1,
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="sets-input"
+              label="Sets"
+              variant="outlined"
+              onChange={handleSets}
+              input="number"
+              sx={{
+                flex: 1,
+              }}
+            />
+          </Grid>
+
+          {/* </Stack>
+          </Box> */}
+          {/* <h1></h1> */}
+          <Grid item>
+            <Button
+              id="custombutton"
               variant="outlined"
               sx={{ color: blue[800], width: "100%", height: "100%" }}
               fullWidth

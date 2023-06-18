@@ -133,7 +133,7 @@ export default function Login() {
           padding: 10,
         }}
       >
-        MyGym
+        JogzGym
       </Typography>
       <Box
         display="flex"
